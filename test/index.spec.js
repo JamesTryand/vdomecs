@@ -1,6 +1,7 @@
 import {expect, should} from "chai";
 import createEntity from "../src/createEntity";
 import createComponent from "../src/createComponent";
+import createSystem from "../src/createSystem";
 
 describe("Entities", () => {
     describe("creating an entity", ()=>{
@@ -23,13 +24,6 @@ describe("a component",() => {
     });
 });
 describe("Systems",() => {
-    const createSystem = (component) => {
-        if(!component || component === undefined) {
-            throw 'components missing'; 
-        }
-        
-        console.log("system created");
-    }
     describe("creating a new system", ()=>{
         it("should require a component ",() => {
             expect(() => {createSystem()}).to.throw();
@@ -37,3 +31,18 @@ describe("Systems",() => {
         });
     });
 });
+// describe("manager",() => {
+//     describe("creating a new manager", ()=>{
+//         it("should give you a manager",() => {
+//             const result = new ECSManager();
+//             expect(result).to.be.an.instanceof(ECSManager);
+//         });
+//     });
+//     describe("a manager needs a scheduler to start",() => {
+//         it("should require a scheduler",() => {
+//             const result = new ECSManager();
+//             const scheduler = () => {};
+//             expect(() => result.start(scheduler)).to.be.an.instanceof(ECSCancellationToken);
+//         });
+//     });
+// });
