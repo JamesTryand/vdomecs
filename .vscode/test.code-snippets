@@ -17,7 +17,7 @@
 	// }
 	"anewbehaviour": {
 		"scope": "javascript,typescript",
-		"prefix": "anewbehaviour",
+		"prefix": "ffbehaviour",
 		"body": [
 			"describe(\"${1:somethin}\", ()=>{",
 			"\tit(\"should ${2:be}\",() => {",
@@ -30,7 +30,7 @@
 	},
 	"anewtest": {
 		"scope": "javascript,typescript",
-		"prefix": "anewtest",
+		"prefix": "fftest",
 		"body": [
 			"it(\"should ${1:be}\",() => {",
 			"\tconst result = ${2:null};",
@@ -41,9 +41,9 @@
 	},
 	"adescriptionof": {
 		"scope": "javascript,typescript",
-		"prefix": "adescriptionof",
+		"prefix": "ffdescription",
 		"body": [
-			"describe(\"a ${1:thing}\",() => {",
+			"describe(\"${1:thing}\",() => {",
 			"\t${0}",
 			"});"
 		],
