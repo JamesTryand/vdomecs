@@ -1,18 +1,24 @@
 import {expect} from "chai";
-import sayHello from "../src/index";
 import createEntity from "../src/createEntity";
+import createComponent from "../src/createComponent";
 
-describe("index test", () => {
-    describe("sayHello function", () => {
-        it("should say Hello Worlds!", () => {
-            const str = sayHello();
-            expect(str).to.equal("Hello Worlds!");
-        })
-    });
-    describe("createEntity things", ()=>{
+describe("Entities", () => {
+    describe("creating an entity", ()=>{
         it("should return an object",() => {
             const result = createEntity();
             expect(result).to.have.property("id").and.equal("hello");
-        })
+        });
     });
-})
+});
+describe("a component",() => {
+    describe("the components structure", ()=>{
+        it("should have a name which is a string",() => {
+            const result = createComponent();
+            expect(result).to.have.property("name").and.be.a("string");
+        });
+        it("should have a state which is an object",() => {
+            const result = createComponent();
+            expect(result).to.have.property("state").and.be.a("object");
+        });
+    });
+});
