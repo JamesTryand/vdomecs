@@ -15,10 +15,4 @@ describe("index test", () => {
             expect(result).to.have.property("id").and.equal("hello");
         })
     });
-    describe("", ()=>{
-        it("should ",() => {
-            const result = null;
-            expect(result).equal("hello");
-        })
-    });
 })
