@@ -22,7 +22,7 @@
 			"describe(\"${1:somethin}\", ()=>{",
 			"\tit(\"should ${2:be}\",() => {",
 			"\t\tconst result = ${3:null};",
-			"\t\texpect(result).equal(${4:result});",
+			"\t\texpect(result).to${0}",
 			"\t});",
 			"});"
 		],
@@ -34,9 +34,19 @@
 		"body": [
 			"it(\"should ${1:be}\",() => {",
 			"\tconst result = ${2:null};",
-			"\texpect(result).equal(${3:result});",
+			"\texpect(result).to${0}",
 			"});"
 		],
 		"description": "a new test"
+	},
+	"adescriptionof": {
+		"scope": "javascript,typescript",
+		"prefix": "adescriptionof",
+		"body": [
+			"describe(\"a ${1:thing}\",() => {",
+			"\t${0}",
+			"});"
+		],
+		"description": "a description"
 	}
 }
