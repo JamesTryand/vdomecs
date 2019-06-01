@@ -1,7 +1,5 @@
 import {expect, should} from "chai";
-import createEntity from "../src/createEntity";
-import createComponent from "../src/createComponent";
-import createSystem from "../src/createSystem";
+import {createEntity, createComponent, createSystem} from "../src/builder";
 
 describe("Entities", () => {
     describe("creating an entity", ()=>{
