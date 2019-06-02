@@ -1,5 +1,6 @@
 import {expect, should} from "chai";
 import {createEntity, createComponent, createSystem} from "../src/builder";
+import {ECSManager} from "../src/ecsManager";
 
 describe("Entities", () => {
     describe("creating an entity", ()=>{
@@ -29,18 +30,18 @@ describe("Systems",() => {
         });
     });
 });
-// describe("manager",() => {
-//     describe("creating a new manager", ()=>{
-//         it("should give you a manager",() => {
-//             const result = new ECSManager();
-//             expect(result).to.be.an.instanceof(ECSManager);
-//         });
-//     });
-//     describe("a manager needs a scheduler to start",() => {
-//         it("should require a scheduler",() => {
-//             const result = new ECSManager();
-//             const scheduler = () => {};
-//             expect(() => result.start(scheduler)).to.be.an.instanceof(ECSCancellationToken);
-//         });
-//     });
-// });
+describe("manager",() => {
+    describe("creating a new manager", ()=>{
+        it("should give you a manager",() => {
+            const result = new ECSManager();
+            expect(result).to.be.an.instanceof(ECSManager);
+        });
+    });
+    // describe("a manager needs a scheduler to start",() => {
+    //     it("should require a scheduler",() => {
+    //         const result = new ECSManager();
+    //         const scheduler = () => {};
+    //         expect(() => result.start(scheduler)).to.be.an.instanceof(ECSCancellationToken);
+    //     });
+    // });
+});
