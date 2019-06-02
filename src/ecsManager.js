@@ -1,7 +1,3 @@
-const ecsManager = () => {
-    return new ECSManager();
-}
-
 export class ECSManager {
     constructor({schedulerFunction,cancellationFunction}) {
         this.schedulerFunction = schedulerFunction;
