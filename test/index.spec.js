@@ -135,9 +135,9 @@ describe("manager",() => {
             // start things off
             manager.start();
         });
-        it("should be able to run for at least a couple of iterations - with a setTimeout scheduler set to 1 second",() => {
+        it("should be able to run for at least a couple of iterations - with a setTimeout scheduler set to 1/2 second",() => {
             // scheduler config
-            let scheduler = createTimeoutScheduler(1000);
+            let scheduler = createTimeoutScheduler(500);
            
             //setup
             const manager = new ECSManager(scheduler);
