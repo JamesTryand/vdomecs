@@ -17,12 +17,12 @@ export class ECSManager {
     withScheduler({schedulerFunction,cancellationFunction}) {
         this.schedulerFunction = schedulerFunction;
         this.cancellationFunction = cancellationFunction;
+        return this;
     }
-    start({schedulerFunction,cancellationFunction}){
-        
-        this.cancellationFunction = cancellationFunction
-        this.schedulerFunction = schedulerFunction
-        
+    start(){
+        if(!this.cancellationFunction && !this.schedulerFunction) {
+            return;
+        }
         this.cancellationToken = this.worker(this.schedulerFunction,this.workflow);
     }
     stop(cancellationFunction = this.cancellationFunction){

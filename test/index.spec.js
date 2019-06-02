@@ -75,32 +75,42 @@ describe("manager",() => {
     //         manager.start({schedulerFunction,cancellationFunction});
             
     //     });
-        describe("starting a flow",() => {
-            it("should be able to run for at least a couple of iterations - with a setTimeout scheduler",() => {
-                const manager = new ECSManager();
-                let iterator = 0;
-                manager.workflow = () => {
-                    console.log(`iteration ${iterator}`)
-                    iterator++;
-                    if(iterator > 2) {
-                        manager.stop();
-                        expect(iterator).to.equal(3)
-                    }
+    
+    describe("starting a flow",() => {
+        it("should be able to run for at least a couple of iterations - with a setTimeout scheduler",() => {
+            // scheduler config
+            
+            let cancelled = false;
+            let schedulerFunction = (k) => {
+                if(cancelled) {
+                    return false;
                 }
-                let cancelled = false;
-                let schedulerFunction = (k) => {
-                    if(cancelled) {
-                        return false;
-                    }
-                    k(schedulerFunction);
-                };
-                let cancellationFunction = (id) => {
-                    cancelled = true;
-                };
-                manager.cancellationFunction = cancellationFunction;
-                manager.schedulerFunction = schedulerFunction;
-                manager.start({schedulerFunction,cancellationFunction});
-                
+                k(schedulerFunction);
+            };
+            let cancellationFunction = (id) => {
+                cancelled = true;
+            };
+            
+            //setup
+            const manager = new ECSManager()
+            .withScheduler({
+                schedulerFunction,
+                cancellationFunction
             });
+            
+            // task definition
+            let iterator = 0;
+            manager.workflow = () => {
+                console.log(`iteration ${iterator}`)
+                iterator++;
+                if(iterator > 2) {
+                    manager.stop();
+                    expect(iterator).to.equal(3)
+                }
+            }
+
+            // start things off
+            manager.start();
+        });
     });
 });
