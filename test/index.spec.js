@@ -113,4 +113,44 @@ describe("manager",() => {
             manager.start();
         });
     });
+
+    describe("starting a flow",() => {
+        let createSimpleScheduler = () => {            
+            let cancelled = false;
+            let schedulerFunction = (k) => {
+                if(cancelled) {
+                    return false;
+                }
+                k(schedulerFunction);
+            };
+            let cancellationFunction = (id) => {
+                cancelled = true;
+            };
+            return {schedulerFunction,cancellationFunction};
+        }
+        it("should be able to run for at least a couple of iterations - with a setTimeout scheduler",() => {
+            // scheduler config
+            let scheduler = createSimpleScheduler();
+           
+            //setup
+            const manager = new ECSManager()
+            .withScheduler(scheduler);
+            
+            // task definition
+            let iterator = 0;
+            manager.workflow = () => {
+                console.log(`iteration ${iterator}`)
+                iterator++;
+                if(iterator > 2) {
+                    manager.stop();
+                    expect(iterator).to.equal(3)
+                }
+            }
+
+            // start things off
+            manager.start();
+        });
+    });
+
+
 });
