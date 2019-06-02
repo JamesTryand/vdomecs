@@ -4,7 +4,8 @@ import {
     createComponent, 
     createSystem,
     createSimpleScheduler,
-    createTimeoutScheduler
+    createTimeoutScheduler,
+    createPromisingScheduler
 } from "../src/builder";
 import {ECSManager} from "../src/ecsManager";
 
@@ -39,13 +40,13 @@ describe("Systems",() => {
 describe("manager",() => {
     describe("creating a new manager", ()=>{
         it("should give you a manager",() => {
-            const result = new ECSManager();
+            const result = new ECSManager(createSimpleScheduler());
             expect(result).to.be.an.instanceof(ECSManager);
         });
     });
     describe("a manager needs a scheduler to start",() => {
         it("should require a scheduler",() => {
-            const result = new ECSManager();
+            const result = new ECSManager(createSimpleScheduler());
             const scheduler = () => {};
             expect(() => result.start(scheduler)).to.be.an.instanceof(Object);
         });
@@ -67,8 +68,7 @@ describe("manager",() => {
             };
             
             //setup
-            const manager = new ECSManager()
-            .withScheduler({
+            const manager = new ECSManager({
                 schedulerFunction,
                 cancellationFunction
             });
@@ -95,8 +95,7 @@ describe("manager",() => {
             let scheduler = createSimpleScheduler();
            
             //setup
-            const manager = new ECSManager()
-            .withScheduler(scheduler);
+            const manager = new ECSManager(scheduler);
             
             // task definition
             let iterator = 0;
@@ -120,8 +119,7 @@ describe("manager",() => {
             let scheduler = createTimeoutScheduler();
            
             //setup
-            const manager = new ECSManager()
-            .withScheduler(scheduler);
+            const manager = new ECSManager(scheduler);
             
             // task definition
             let iterator = 0;
@@ -142,8 +140,7 @@ describe("manager",() => {
             let scheduler = createTimeoutScheduler(1000);
            
             //setup
-            const manager = new ECSManager()
-            .withScheduler(scheduler);
+            const manager = new ECSManager(scheduler);
             
             // task definition
             let iterator = 0;
@@ -162,45 +159,12 @@ describe("manager",() => {
     });
 
     describe("starting a flow",() => {
-        let createPromisingScheduler = () => {
-            /// with the promises, we wrap this up such that
-            /// we're able to work with Promises.
-
-            /// The promises as a whole has to differentiate the beginning
-            /// and the rest of the flow.
-            /// As such rather than just a completion, we also need to know when it starts.
-
-            /// the benefit of this is that the promises do not bleed into the rest of the system.
-            let started = false;
-            let cancelled = false;
-            let schedulerFunction = (k) => {
-                if(!started) {
-                    started  = true;
-                    return begin();
-                }
-                return cancelled ? 
-                    Promise.resolve() :
-                    continuation(k);
-            };
-            let cancellationFunction = (id) => {
-                cancelled = true;
-            };
-            let begin = () => {
-                Promise.resolve();
-            }
-            let continuation = (k) => {
-                Promise.resolve().then(() => k(continuation));
-            }
-
-            return {schedulerFunction,cancellationFunction};
-        }
         it("should be able to run for at least a couple of iterations - with a promising scheduler",() => {
             // scheduler config
             let scheduler = createPromisingScheduler();
            
             //setup
-            const manager = new ECSManager()
-            .withScheduler(scheduler);
+            const manager = new ECSManager(scheduler);
             
             // task definition
             let iterator = 0;

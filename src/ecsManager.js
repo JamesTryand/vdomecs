@@ -3,8 +3,9 @@ const ecsManager = () => {
 }
 
 export class ECSManager {
-    constructor() {
-        this.cancellationFunction = ()=>{};
+    constructor({schedulerFunction,cancellationFunction}) {
+        this.schedulerFunction = schedulerFunction;
+        this.cancellationFunction = cancellationFunction;
         this.cancellationToken = {};
         this.workflow = () => {
             console.log("worker");
@@ -13,11 +14,6 @@ export class ECSManager {
             this.workflow();
             this.cancellationToken = schedulerFunction(this.worker);
         };
-    }
-    withScheduler({schedulerFunction,cancellationFunction}) {
-        this.schedulerFunction = schedulerFunction;
-        this.cancellationFunction = cancellationFunction;
-        return this;
     }
     start(){
         if(!this.cancellationFunction && !this.schedulerFunction) {
