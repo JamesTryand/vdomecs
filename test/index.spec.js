@@ -161,5 +161,61 @@ describe("manager",() => {
         });
     });
 
+    describe("starting a flow",() => {
+        let createPromisingScheduler = () => {
+            /// with the promises, we wrap this up such that
+            /// we're able to work with Promises.
+
+            /// The promises as a whole has to differentiate the beginning
+            /// and the rest of the flow.
+            /// As such rather than just a completion, we also need to know when it starts.
+
+            /// the benefit of this is that the promises do not bleed into the rest of the system.
+            let started = false;
+            let cancelled = false;
+            let schedulerFunction = (k) => {
+                if(!started) {
+                    started  = true;
+                    return begin();
+                }
+                return cancelled ? 
+                    Promise.resolve() :
+                    continuation(k);
+            };
+            let cancellationFunction = (id) => {
+                cancelled = true;
+            };
+            let begin = () => {
+                Promise.resolve();
+            }
+            let continuation = (k) => {
+                Promise.resolve().then(() => k(continuation));
+            }
+
+            return {schedulerFunction,cancellationFunction};
+        }
+        it("should be able to run for at least a couple of iterations - with a promising scheduler",() => {
+            // scheduler config
+            let scheduler = createPromisingScheduler();
+           
+            //setup
+            const manager = new ECSManager()
+            .withScheduler(scheduler);
+            
+            // task definition
+            let iterator = 0;
+            manager.workflow = () => {
+                console.log(`iteration ${iterator}`)
+                iterator++;
+                if(iterator > 2) {
+                    manager.stop();
+                    expect(iterator).to.equal(3)
+                }
+            }
+
+            // start things off
+            manager.start();
+        });
+    });
 
 });
