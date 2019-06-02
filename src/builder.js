@@ -16,10 +16,7 @@ export const createSystem = (component) => {
 export const createSimpleScheduler = () => {            
     let cancelled = false;
     let schedulerFunction = (k) => {
-        if(cancelled) {
-            return false;
-        }
-        k(schedulerFunction);
+        return cancelled ? false : k(schedulerFunction);
     };
     let cancellationFunction = (id) => {
         cancelled = true;
@@ -30,12 +27,8 @@ export const createSimpleScheduler = () => {
 export const createTimeoutScheduler = (pause = 60) => {
     let cancelled = false;
     let schedulerFunction = (k) => {
-        if(cancelled) {
-            return false;
-        }
-        let recurse = () => k(schedulerFunction);
-        
-        return setTimeout(recurse,pause);
+        return cancelled ? 
+          false : setTimeout(() => k(schedulerFunction),pause);         
     };
     let cancellationFunction = (id) => {
         clearTimeout(id);
@@ -45,9 +38,6 @@ export const createTimeoutScheduler = (pause = 60) => {
 }
 
 export const  createPromisingScheduler = () => {
-    /// with the promises, we wrap this up such that
-    /// we're able to work with Promises.
-
     /// The promises as a whole has to differentiate the beginning
     /// and the rest of the flow.
     /// As such rather than just a completion, we also need to know when it starts.
@@ -76,4 +66,3 @@ export const  createPromisingScheduler = () => {
 
     return {schedulerFunction,cancellationFunction};
 }
-
