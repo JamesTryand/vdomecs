@@ -3,7 +3,8 @@ import {
     createEntity, 
     createComponent, 
     createSystem,
-    createSimpleScheduler
+    createSimpleScheduler,
+    createTimeoutScheduler
 } from "../src/builder";
 import {ECSManager} from "../src/ecsManager";
 
@@ -113,25 +114,32 @@ describe("manager",() => {
         });
     });
     describe("starting a flow",() => {
-        let createTimeoutScheduler = () => {
-            let cancelled = false;
-            let schedulerFunction = (k) => {
-                if(cancelled) {
-                    return false;
-                }
-                let recurse = () => k(schedulerFunction);
-                
-                return setTimeout(recurse,60);
-            };
-            let cancellationFunction = (id) => {
-                clearTimeout(id);
-                cancelled = true;
-            };
-            return {schedulerFunction,cancellationFunction};
-        }
+        
         it("should be able to run for at least a couple of iterations - with a setTimeout scheduler",() => {
             // scheduler config
             let scheduler = createTimeoutScheduler();
+           
+            //setup
+            const manager = new ECSManager()
+            .withScheduler(scheduler);
+            
+            // task definition
+            let iterator = 0;
+            manager.workflow = () => {
+                console.log(`iteration ${iterator}`)
+                iterator++;
+                if(iterator > 2) {
+                    manager.stop();
+                    expect(iterator).to.equal(3)
+                }
+            }
+
+            // start things off
+            manager.start();
+        });
+        it("should be able to run for at least a couple of iterations - with a setTimeout scheduler set to 1 second",() => {
+            // scheduler config
+            let scheduler = createTimeoutScheduler(1000);
            
             //setup
             const manager = new ECSManager()
