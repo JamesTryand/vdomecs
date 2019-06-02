@@ -13,3 +13,17 @@ export const createSystem = (component) => {
     }
 }; 
 
+export const createSimpleScheduler = () => {            
+    let cancelled = false;
+    let schedulerFunction = (k) => {
+        if(cancelled) {
+            return false;
+        }
+        k(schedulerFunction);
+    };
+    let cancellationFunction = (id) => {
+        cancelled = true;
+    };
+    return {schedulerFunction,cancellationFunction};
+}
+

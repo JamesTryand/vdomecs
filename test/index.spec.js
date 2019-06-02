@@ -1,7 +1,11 @@
 import {expect, should} from "chai";
-import {createEntity, createComponent, createSystem} from "../src/builder";
+import {
+    createEntity, 
+    createComponent, 
+    createSystem,
+    createSimpleScheduler
+} from "../src/builder";
 import {ECSManager} from "../src/ecsManager";
-import { domainToUnicode } from "url";
 
 describe("Entities", () => {
     describe("creating an entity", ()=>{
@@ -45,39 +49,9 @@ describe("manager",() => {
             expect(() => result.start(scheduler)).to.be.an.instanceof(Object);
         });
     });
-    // describe("starting a flow",() => {
-    //     it("should be able to run for at least a couple of iterations - with a setTimeout scheduler",() => {
-    //         const manager = new ECSManager();
-    //         let iterator = 0;
-    //         manager.workflow = () => {
-    //             console.log(`iteration ${iterator}`)
-    //             iterator++;
-    //             if(iterator > 2) {
-    //                 manager.stop();
-    //                 expect(iterator).to.equal(3)
-    //             }
-    //         }
-    //         let lastTime = 0;
-    //         let schedulerFunction = (callback, context) => {
-    //             // var currTime = new Date().getTime();
-    //             // var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-    //             // var id = setTimeout(callback, timeToCall);
-    //             // lastTime = currTime + timeToCall;
-    //             // return id;
-    //             let id = setTimeout(callback(schedulerFunction),60);
-    //             return id;
-    //         };
-    //         let cancellationFunction = (id) => {
-    //             clearTimeout(id);
-    //         };
-    //         manager.cancellationFunction = cancellationFunction;
-    //         manager.schedulerFunction = schedulerFunction;
-    //         manager.start({schedulerFunction,cancellationFunction});
-            
-    //     });
     
     describe("starting a flow",() => {
-        it("should be able to run for at least a couple of iterations - with a setTimeout scheduler",() => {
+        it("should be able to run for at least a couple of iterations - with a simple scheduler",() => {
             // scheduler config
             
             let cancelled = false;
@@ -115,22 +89,49 @@ describe("manager",() => {
     });
 
     describe("starting a flow",() => {
-        let createSimpleScheduler = () => {            
+        it("should be able to run for at least a couple of iterations - with a setTimeout scheduler",() => {
+            // scheduler config
+            let scheduler = createSimpleScheduler();
+           
+            //setup
+            const manager = new ECSManager()
+            .withScheduler(scheduler);
+            
+            // task definition
+            let iterator = 0;
+            manager.workflow = () => {
+                console.log(`iteration ${iterator}`)
+                iterator++;
+                if(iterator > 2) {
+                    manager.stop();
+                    expect(iterator).to.equal(3)
+                }
+            }
+
+            // start things off
+            manager.start();
+        });
+    });
+    describe("starting a flow",() => {
+        let createTimeoutScheduler = () => {
             let cancelled = false;
             let schedulerFunction = (k) => {
                 if(cancelled) {
                     return false;
                 }
-                k(schedulerFunction);
+                let recurse = () => k(schedulerFunction);
+                
+                return setTimeout(recurse,60);
             };
             let cancellationFunction = (id) => {
+                clearTimeout(id);
                 cancelled = true;
             };
             return {schedulerFunction,cancellationFunction};
         }
         it("should be able to run for at least a couple of iterations - with a setTimeout scheduler",() => {
             // scheduler config
-            let scheduler = createSimpleScheduler();
+            let scheduler = createTimeoutScheduler();
            
             //setup
             const manager = new ECSManager()
