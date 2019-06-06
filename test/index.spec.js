@@ -181,5 +181,98 @@ describe("manager",() => {
             manager.start();
         });
     });
+    describe("defining a component", ()=>{
+        it("should mean that an entity can be defined with that component",() => {
+            // const manager = new ECSManager(createSimpleScheduler());
 
+            // // component: name, structure
+            // manager.defineComponent('first',{ first: 0});
+
+            // // events: name, state, id?
+            // manager.defineEvent('event1',{value:0});
+            // manager.defineEvent('event1',{value:0},"first");
+            
+            // // system: name, component, events to listen for
+            // manager.defineSystem('systemFirst','first',['event1','event2']);
+            // // system = (componentState,event) => componentState
+
+            // // a template for creating an entity
+            // manager.defineAssemblage('thing1',['first','second','third'])
+
+            // manager.addComponentToEntity("entityid",['component'])
+            // manager.removeComponentFromEntity("entityid",['component'])
+
+            // // manager should have two tables
+            // // manager.componentsOfEntity('entityid') => ['first','second','third']
+            // // manager.entitiesOfComponent('first') => ['entity1','entity2','entity3']
+            // // manager.getComponentForEntity('entityid','first')
+            // // manager.getComponent('first') => {'entity1'...}
+
+            // // manager.removeEntity = (entity) => { foreach(let component of manager.componentsOfEntity(entity)) { component.remove(entity) } }
+            
+            // const result = manager.newEntity('first');
+            
+            
+            
+
+        });
+    });
+
+    describe("adding a component to an entity",() => {
+        describe("given an entity and a component", ()=>{
+            it("should possible to add a component to the entity",() => {
+                const manager = new ECSManager(createSimpleScheduler());
+
+
+
+                // define component called first with init of () => state
+                //- what's the lifecycle of an entity?
+                    // add entity to manager
+                    // make a new entity (explicitly state new key (use a generator?))
+                // from the entity add predefined components
+
+                // so component definition is {name:string, init:()=>state}
+                // system definition is {(event,state)=>state}}
+
+                // event options = 
+                // {kind:string,subject:string,payload:object}
+
+                // how to handle the events?
+
+                // okay so the manager manages the scheduling
+                // entities are created.
+
+                // events: name*sender*state
+                // or should there be a channel instead?
+
+                // components: init
+                
+                // system<kind>: event*state => state
+                // manager.defineComponent('first',{ first:0 });
+                // manager.defineComponent('second',{second_a:0, second_b:"x" });
+                // manager.defineComponent('third',{third: { name: "bob", age: 0}});
+
+
+
+manager.addEntity(createEntity(),['first','second','third'])
+
+                
+                // manager.
+                //     defineComponent('first',(thatwill) => {return { name: "", age: 0}}).
+                //     and.
+                //     defineSystemFor(['first'])
+                //     afterwards.
+                //     thenMake(a => 
+                //     a.newEntity("1").
+                //     with(['first']))
+
+
+                // const entity = createEntity("1");
+                // const componentTemplate = createComponent('first',{ name : "", age : 0 });
+                // manager.componentDefinitions['first'] = componentTemplate;
+                // const result = manager.addComponent(entity, 'first')
+                // expect(getComponentFor(entity,'first')).should.be.instanceOf(() => { name = "", age = 0 });
+            });
+        });
+    });
 });
